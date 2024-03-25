@@ -2,6 +2,7 @@ package org.enshine.myshortlink.admin.common.convention.result;
 
 
 import org.enshine.myshortlink.admin.common.convention.errorcode.BaseErrorCode;
+import org.enshine.myshortlink.admin.common.convention.errorcode.IErrorCode;
 import org.enshine.myshortlink.admin.common.convention.exception.AbstractException;
 
 import java.util.Optional;
@@ -57,5 +58,14 @@ public final class Results {
         return new Result<Void>()
                 .setCode(errorCode)
                 .setMessage(errorMessage);
+    }
+
+    /**
+     * 通过自定义的 错误码枚举 构建失败响应
+     */
+    public static Result<Void> failure(IErrorCode errorCode) {
+        return new Result<Void>()
+                .setCode(errorCode.code())
+                .setMessage(errorCode.message());
     }
 }

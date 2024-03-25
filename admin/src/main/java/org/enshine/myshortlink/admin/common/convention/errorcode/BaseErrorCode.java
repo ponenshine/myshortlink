@@ -4,7 +4,6 @@ package org.enshine.myshortlink.admin.common.convention.errorcode;
  * 基础错误码定义
  */
 public enum BaseErrorCode implements IErrorCode {
-
     // ========== 一级宏观错误码 客户端错误 ==========
     CLIENT_ERROR("A000001", "用户端错误"),
 
@@ -25,13 +24,25 @@ public enum BaseErrorCode implements IErrorCode {
     // ========== 二级宏观错误码 系统请求操作频繁 ==========
     FLOW_LIMIT_ERROR("A000300", "当前系统繁忙，请稍后再试"),
 
+
+
+
+
     // ========== 一级宏观错误码 系统执行出错 ==========
     SERVICE_ERROR("B000001", "系统执行出错"),
     // ========== 二级宏观错误码 系统执行超时 ==========
     SERVICE_TIMEOUT_ERROR("B000100", "系统执行超时"),
 
+
+
+
+
     // ========== 一级宏观错误码 调用第三方服务出错 ==========
     REMOTE_ERROR("C000001", "调用第三方服务出错");
+
+
+
+
 
     private final String code;
 
