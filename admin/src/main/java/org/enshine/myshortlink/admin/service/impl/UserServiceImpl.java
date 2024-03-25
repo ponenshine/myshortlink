@@ -60,6 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     public void update(UserUpdateReqDTO requestParam) {
         // TODO 验证当前用户名是否为登录用户
         // TODO 验证当前用户是否与用户名匹配
+
         boolean update = update(BeanUtil.toBean(requestParam, UserDO.class),
                 Wrappers.lambdaUpdate(UserDO.class).eq(UserDO::getUsername, requestParam.getUsername()));
         if(!update){
