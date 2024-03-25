@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.enshine.myshortlink.admin.common.convention.result.Result;
 import org.enshine.myshortlink.admin.common.convention.result.Results;
 import org.enshine.myshortlink.admin.dto.req.UserRegisterReqDTO;
+import org.enshine.myshortlink.admin.dto.req.UserUpdateReqDTO;
 import org.enshine.myshortlink.admin.dto.resp.UserActualRespDTO;
 import org.enshine.myshortlink.admin.dto.resp.UserRespDTO;
 import org.enshine.myshortlink.admin.service.IUserService;
@@ -48,6 +49,15 @@ public class UserController {
     @PostMapping("/api/shortlink/v1/actual/user")
     public Result<Void> register(@RequestBody UserRegisterReqDTO requestParam){
         userService.register(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 修改用户个人信息
+     */
+    @PutMapping("/api/shortlink/v1/actual/user")
+    public Result<Void> update(@RequestBody UserUpdateReqDTO requestParam){
+        userService.update(requestParam);
         return Results.success();
     }
 }

@@ -1,6 +1,7 @@
 package org.enshine.myshortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.enshine.myshortlink.admin.common.constant.RedisCacheConstant;
@@ -8,6 +9,7 @@ import org.enshine.myshortlink.admin.common.convention.exception.ClientException
 import org.enshine.myshortlink.admin.dao.entity.UserDO;
 import org.enshine.myshortlink.admin.dao.mapper.UserMapper;
 import org.enshine.myshortlink.admin.dto.req.UserRegisterReqDTO;
+import org.enshine.myshortlink.admin.dto.req.UserUpdateReqDTO;
 import org.enshine.myshortlink.admin.dto.resp.UserRespDTO;
 import org.enshine.myshortlink.admin.service.IUserService;
 import org.redisson.api.RBloomFilter;
@@ -51,6 +53,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             throw new ClientException(USER_NAME_EXIST);
         }finally {
             lock.unlock();
+        }
+    }
+
+    @Override
+    public void update(UserUpdateReqDTO requestParam) {
+        // TODO 验证当前用户名是否为登录用户
+        // TODO 验证当前用户是否与用户名匹配
+        boolean update = update(BeanUtil.toBean(requestParam, UserDO.class),
+                Wrappers.lambdaUpdate(UserDO.class).eq(UserDO::getUsername, requestParam.getUsername()));
+        if(!update){
+            throw new ClientException(USER_UPDATE_ERROR);
         }
     }
 }
