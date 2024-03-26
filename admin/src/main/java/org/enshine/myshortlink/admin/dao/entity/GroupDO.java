@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.enshine.myshortlink.admin.common.database.BaseDO;
 
 @Data
@@ -12,6 +13,7 @@ import org.enshine.myshortlink.admin.common.database.BaseDO;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 public class GroupDO extends BaseDO {
 
     /**

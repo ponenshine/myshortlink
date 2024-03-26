@@ -3,7 +3,7 @@ package org.enshine.myshortlink.admin.dto.req;
 import lombok.Data;
 
 /**
- * 用户注册请求参数
+ * 修改用户信息请求参数
  */
 @Data
 public class UserUpdateReqDTO {
