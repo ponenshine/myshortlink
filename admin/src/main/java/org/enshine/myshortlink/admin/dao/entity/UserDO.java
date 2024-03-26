@@ -1,8 +1,6 @@
 package org.enshine.myshortlink.admin.dao.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,7 +12,7 @@ import java.util.Date;
 public class UserDO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @TableField(fill = FieldFill.INSERT)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
