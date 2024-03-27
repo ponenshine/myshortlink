@@ -96,7 +96,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (Boolean.TRUE.equals(hasLogin)) {
             throw new ClientException(USER_HAS_LOGIN);
         }
-        String token = SecureUtil.md5().toString();
+        String data="ai346346eouw3456645beh4563v24314fiug23542wew243eafawfff43vw4r4eafeafw65efe";
+        String token = SecureUtil.md5(data);
         stringRedisTemplate.opsForHash().put(RedisCacheConstant.KEY_USER_LOGIN + requestParam.getUsername(),
                 token, JSONUtil.toJsonStr(userDO));
         stringRedisTemplate.expire(RedisCacheConstant.KEY_USER_LOGIN + requestParam.getUsername(),
