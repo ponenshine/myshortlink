@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.enshine.myshortlink.admin.common.constant.RedisCacheConstant;
 import org.enshine.myshortlink.admin.common.convention.exception.ClientException;
+import org.enshine.myshortlink.admin.common.convention.exception.ServiceException;
 import org.enshine.myshortlink.admin.dao.entity.UserDO;
 import org.enshine.myshortlink.admin.dao.mapper.UserMapper;
 import org.enshine.myshortlink.admin.dto.req.UserLoginReqDTO;
@@ -53,8 +54,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
         RLock lock = redissonClient.getLock(RedisCacheConstant.LOCK_USER_REGISTER_KEY + requestParam.getUsername());
         try {
+            // 加锁 防止他人使用同一个用户名刷接口
             if (lock.tryLock()) {
-                boolean save = save(BeanUtil.toBean(requestParam, UserDO.class));
+                boolean save=true;
+                try{
+                    save = save(BeanUtil.toBean(requestParam, UserDO.class));
+                }catch (Exception e){
+                    throw new ServiceException(e.getMessage());
+                }
                 if (!save) throw new ClientException(USER_SAVE_ERROR);
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
                 return;
@@ -96,7 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (Boolean.TRUE.equals(hasLogin)) {
             throw new ClientException(USER_HAS_LOGIN);
         }
-        String data="ai346346eouw3456645beh4563v24314fiug23542wew243eafawfff43vw4r4eafeafw65efe";
+        String data = "ai346346eouw3456645beh4563v24314fiug23542wew243eafawfff43vw4r4eafeafw65efe";
         String token = SecureUtil.md5(data);
         stringRedisTemplate.opsForHash().put(RedisCacheConstant.KEY_USER_LOGIN + requestParam.getUsername(),
                 token, JSONUtil.toJsonStr(userDO));
