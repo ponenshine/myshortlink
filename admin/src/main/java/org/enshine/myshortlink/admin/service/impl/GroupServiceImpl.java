@@ -1,4 +1,4 @@
-package org.enshine.myshortlink.admin.service;
+package org.enshine.myshortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -11,6 +11,7 @@ import org.enshine.myshortlink.admin.dao.mapper.GroupMapper;
 import org.enshine.myshortlink.admin.dto.req.GroupSortReqDTO;
 import org.enshine.myshortlink.admin.dto.req.GroupUpdateReqDTO;
 import org.enshine.myshortlink.admin.dto.resp.GroupRespDTO;
+import org.enshine.myshortlink.admin.service.IGroupService;
 import org.enshine.myshortlink.admin.util.RandomGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     @Override
     public void save(String name) {
         Long gCount = baseMapper.selectCount(Wrappers.lambdaQuery(GroupDO.class)
-                .eq(GroupDO::getUsername, UserContext.getUsername()));
+                .eq(GroupDO::getUsername, UserContext.getUsername())
+                .eq(GroupDO::getDelFlag,0));
         if (gCount == 10) {
             throw new ClientException(GROUP_COUNT_LIMITED);
         }
@@ -54,7 +56,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     @Override
     public List<GroupRespDTO> listByUsername() {
         List<GroupDO> groupDOList = baseMapper.selectList(Wrappers.lambdaQuery(GroupDO.class)
-                .eq(GroupDO::getUsername, UserContext.getUsername()));
+                .eq(GroupDO::getUsername, UserContext.getUsername())
+                .eq(GroupDO::getDelFlag,0));
         return BeanUtil.copyToList(groupDOList, GroupRespDTO.class);
     }
 
