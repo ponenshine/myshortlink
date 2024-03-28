@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.enshine.myshortlink.admin.common.biz.user.UserContext;
+import org.enshine.myshortlink.admin.common.biz.user.UserInfoDTO;
 import org.enshine.myshortlink.admin.common.constant.RedisCacheConstant;
 import org.enshine.myshortlink.admin.common.convention.exception.ClientException;
 import org.enshine.myshortlink.admin.common.convention.exception.ServiceException;
@@ -17,6 +19,7 @@ import org.enshine.myshortlink.admin.dto.req.UserRegisterReqDTO;
 import org.enshine.myshortlink.admin.dto.req.UserUpdateReqDTO;
 import org.enshine.myshortlink.admin.dto.resp.UserLoginRespDTO;
 import org.enshine.myshortlink.admin.dto.resp.UserRespDTO;
+import org.enshine.myshortlink.admin.service.IGroupService;
 import org.enshine.myshortlink.admin.service.IUserService;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -34,6 +37,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
+    private final IGroupService groupService;
 
     @Override
     public UserRespDTO getUserByUsername(String username) {
@@ -60,13 +64,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 try{
                     save = save(BeanUtil.toBean(requestParam, UserDO.class));
                 }catch (Exception e){
-                    throw new ServiceException(e.getMessage());
+                    throw new ServiceException(USER_EXIST);
                 }
                 if (!save) throw new ClientException(USER_SAVE_ERROR);
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
-                return;
+
+                // 用户注册成功后添加默认短链接分组
+                UserContext.setUser(new UserInfoDTO().setUsername(requestParam.getUsername()));
+                groupService.save("默认分组");
+            }else {
+                throw new ClientException(USER_NAME_EXIST);
             }
-            throw new ClientException(USER_NAME_EXIST);
         } finally {
             lock.unlock();
         }
@@ -80,7 +88,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         boolean update = update(BeanUtil.toBean(requestParam, UserDO.class),
                 Wrappers.lambdaUpdate(UserDO.class).eq(UserDO::getUsername, requestParam.getUsername()));
         if (!update) {
-            throw new ClientException(USER_UPDATE_ERROR);
+            throw new ServiceException(USER_UPDATE_ERROR);
         }
     }
 
