@@ -1,20 +1,16 @@
-package org.enshine.myshortlink.project.dao.entity;
+package org.enshine.myshortlink.admin.remote.resp;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
-import org.enshine.myshortlink.project.common.database.BaseDO;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
-@TableName("t_link")
-@Accessors(chain = true)
-public class LinkDO extends BaseDO {
-    private static final long serialVersionUID = 1L;
-
+@NoArgsConstructor
+@AllArgsConstructor
+public class LinkPageRespDTO {
     /**
      * 短链接域名
      */
@@ -36,11 +32,6 @@ public class LinkDO extends BaseDO {
     private String originUrl;
 
     /**
-     * 分组标识
-     */
-    private String gid;
-
-    /**
      * 点击量
      */
     private Integer clickNum;
@@ -51,11 +42,6 @@ public class LinkDO extends BaseDO {
     private Integer enableStatus;
 
     /**
-     * 创建类型：0: 控制台创建 1: 接口创建
-     */
-    private Integer createType;
-
-    /**
      * 有效期类型：0: 永久有效 1: 自定义
      */
     private Integer validDateType;
@@ -63,7 +49,6 @@ public class LinkDO extends BaseDO {
     /**
      * 有效期至
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date validDate;
 
     /**

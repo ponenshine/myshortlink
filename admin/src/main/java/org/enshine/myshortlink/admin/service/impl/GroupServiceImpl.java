@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.enshine.myshortlink.admin.common.biz.user.UserContext;
 import org.enshine.myshortlink.admin.common.convention.exception.ClientException;
+import org.enshine.myshortlink.admin.common.convention.exception.ServiceException;
 import org.enshine.myshortlink.admin.dao.entity.GroupDO;
 import org.enshine.myshortlink.admin.dao.mapper.GroupMapper;
 import org.enshine.myshortlink.admin.dto.req.GroupSortReqDTO;
@@ -39,7 +40,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         }
         boolean save = save(new GroupDO().setGid(gid).setName(name).setUsername(UserContext.getUsername()));
         if (!save) {
-            throw new ClientException(GROUP_SAVE_FAIL);
+            throw new ServiceException(GROUP_SAVE_FAIL);
         }
     }
 
@@ -49,7 +50,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getGid, requestParam.getGid())
                 .set(GroupDO::getName, requestParam.getName()));
         if (!update) {
-            throw new ClientException(GROUP_UPDATE_FAIL);
+            throw new ServiceException(GROUP_UPDATE_FAIL);
         }
     }
 
@@ -57,7 +58,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     public List<GroupRespDTO> listByUsername() {
         List<GroupDO> groupDOList = baseMapper.selectList(Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getUsername, UserContext.getUsername())
-                .eq(GroupDO::getDelFlag,0));
+                .eq(GroupDO::getDelFlag, 0));
         return BeanUtil.copyToList(groupDOList, GroupRespDTO.class);
     }
 
@@ -67,7 +68,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getGid, gid)
                 .set(GroupDO::getDelFlag, 1));
         if (!update) {
-            throw new ClientException(GROUP_DELETE_FAIL);
+            throw new ServiceException(GROUP_DELETE_FAIL);
         }
     }
 
@@ -79,7 +80,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                     .eq(GroupDO::getGid, groupSortReqDTO.getGid())
                     .set(GroupDO::getSortOrder, groupSortReqDTO.getSortOrder()));
             if (!update) {
-                throw new ClientException(GROUP_UPDATE_FAIL);
+                throw new ServiceException(GROUP_UPDATE_FAIL);
             }
         }
     }
