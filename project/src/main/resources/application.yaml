@@ -2,6 +2,12 @@ server:
   port: 8001
 
 spring:
+  application:
+    name: shortlink-project
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.197.138:8848
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.197.138:3306/shortlink?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&tinyInt1isBit=false&allowPublicKeyRetrieval=true
@@ -18,3 +24,8 @@ spring:
       host: 192.168.197.138
       port: 6379
       password: enshine
+
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  mapper-locations: classpath:mapper/*.xml
