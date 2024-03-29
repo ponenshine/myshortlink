@@ -1,17 +1,17 @@
 package org.enshine.myshortlink.project.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.enshine.myshortlink.project.common.convention.result.Result;
 import org.enshine.myshortlink.project.common.convention.result.Results;
 import org.enshine.myshortlink.project.dto.req.LinkPageReqDTO;
 import org.enshine.myshortlink.project.dto.req.LinkSaveReqDTO;
 import org.enshine.myshortlink.project.dto.resp.LinkPageRespDTO;
 import org.enshine.myshortlink.project.service.ILinkService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +20,7 @@ public class LinkController {
 
     /**
      * 新增短链接
+     * 请求参数的originUrl一定要带上Http(s)://前缀 否则重定向会出现问题
      */
     @PostMapping("/api/shortlink/v1/link")
     public Result<Void> create(@RequestBody LinkSaveReqDTO requestParam){
@@ -35,7 +36,14 @@ public class LinkController {
         return Results.success(linkService.pageByGid(requestParam));
     }
 
-    // TODO 短链接信息修改
-
+    /**
+     * 短链接跳转
+     */
+    @GetMapping("/{uri}")
+    @SneakyThrows
+    public Result<Void> redirect(@PathVariable String uri, HttpServletRequest request, HttpServletResponse response){
+        linkService.redirect(uri,request,response);
+        return Results.success();
+    }
 
 }
