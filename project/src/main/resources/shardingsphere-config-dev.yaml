@@ -15,8 +15,18 @@ rules:
           standard:
             shardingColumn: gid
             shardingAlgorithmName: link_table_hash_mod
+      t_uri_gid:
+        actualDataNodes: ds_0.t_uri_gid_${0..9}
+        tableStrategy:
+          standard:
+            shardingColumn: uri
+            shardingAlgorithmName: uri_gid_table_hash_mod
     shardingAlgorithms:
       link_table_hash_mod:
+        type: HASH_MOD
+        props:
+          sharding-count: 10
+      uri_gid_table_hash_mod:
         type: HASH_MOD
         props:
           sharding-count: 10
