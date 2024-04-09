@@ -1,5 +1,6 @@
 package org.enshine.myshortlink.project.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +11,7 @@ import org.enshine.myshortlink.project.common.convention.result.Results;
 import org.enshine.myshortlink.project.dto.req.LinkPageReqDTO;
 import org.enshine.myshortlink.project.dto.req.LinkSaveReqDTO;
 import org.enshine.myshortlink.project.dto.resp.LinkPageRespDTO;
+import org.enshine.myshortlink.project.handler.CustomBlockHandler;
 import org.enshine.myshortlink.project.service.ILinkService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,11 @@ public class LinkController {
      * 新增短链接
      * 请求参数的originUrl一定要带上Http(s)://前缀 否则重定向会出现问题
      */
+    @SentinelResource(
+            value = "create_short-link",
+            blockHandler = "createShortLinkBlockHandlerMethod",
+            blockHandlerClass = CustomBlockHandler.class
+    )
     @PostMapping("/api/shortlink/v1/link")
     public Result<Void> create(@RequestBody LinkSaveReqDTO requestParam){
         linkService.create(requestParam);
